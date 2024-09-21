@@ -97,6 +97,7 @@
                   <tr>
                       <th>id</th>
                       <th class="w-50">Tarea</th>
+                      <th class="w-50">Fecha creacion</th>
                       <th>Estado</th>
                       <th>Editar</th>
                       <th>Eliminar</th>
@@ -108,6 +109,16 @@
                         <tr>
                           <td><%= task.id_task %></td>
                           <td><%= task.nombre_task %></td>
+                          <td>
+                            <% 
+                            const fecha = new Date(task.fecha_creacion);
+                            const dia = String(fecha.getDate()).padStart(2, '0');
+                            const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses son 0-11
+                            const anio = fecha.getFullYear();
+                            const fechaFormateada = `${dia}/${mes}/${anio}`;
+                            %>
+                            <%= fechaFormateada %>
+                          </td>
                           <td><%= task.status === 0 ? 'Pendiente' : 'Completado' %></td>
                           <td>
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editTaskModal"

@@ -11,16 +11,19 @@ router.get('/register', (req, res)=>{
     res.render('register')
 })
 
-//router para los métodos del controller
-router.post('/registerTask', authController.registerTask)
-router.post('/register', authController.register)
-router.post('/login', authController.login)
-router.get('/logout', authController.logout)
-router.get('/getAllTareas', authController.getAllTareas)
+// Rutas protegidas que requieren autenticación
+router.post('/registerTask', authController.isAuthenticated, authController.registerTask);
+router.get('/getAllTareas', authController.isAuthenticated, authController.getAllTareas);
 router.get('/', authController.isAuthenticated, authController.getAllTareas);
-router.post('/deleteTask/:id', authController.deleteTask);
-router.post('/editTask', authController.editTask);
+router.post('/deleteTask/:id', authController.isAuthenticated, authController.deleteTask);
+router.post('/editTask', authController.isAuthenticated, authController.editTask);
 router.get('/search', authController.isAuthenticated, authController.searchTasks);
+
+// Rutas de autenticación
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.get('/logout', authController.logout);
+
 
 
 module.exports = router

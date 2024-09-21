@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-09-2024 a las 23:39:07
+-- Tiempo de generación: 21-09-2024 a las 04:09:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,16 +30,19 @@ SET time_zone = "+00:00";
 CREATE TABLE `task` (
   `id_task` int(11) NOT NULL,
   `nombre_task` varchar(50) NOT NULL,
-  `status` int(11) NOT NULL
+  `fecha_creacion` date NOT NULL DEFAULT current_timestamp(),
+  `status` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `task`
 --
 
-INSERT INTO `task` (`id_task`, `nombre_task`, `status`) VALUES
-(3, 'Comprar para el desayuno', 1),
-(4, 'Comprar para el almuerzo', 1);
+INSERT INTO `task` (`id_task`, `nombre_task`, `fecha_creacion`, `status`, `user_id`) VALUES
+(1, 'Comprar para el desayuno', '2024-09-20', 0, 1),
+(2, 'Comprar para el almuerzo', '2024-09-20', 0, 1),
+(3, 'Comprar pollo', '2024-09-20', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -65,7 +68,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `nombres_user`, `apellido_user`, `user`, `password`, `status`, `fecha_creacion`, `ultimo_acceso`, `tipo_usuario`) VALUES
 (1, 'Pedro Perez', '', 'pperez', '$2a$08$lyLXb5GlKuki5YktPd5zXu9OzZzFZs9EJdjpvEJ5GaWz244oH9yRW', 0, '0000-00-00', '0000-00-00', 'GENERAL'),
-(3, 'Santiago Rubiano', '', 'srubiano', '$2a$08$/1ncorp1oQJV6yvs2dsAbOj9cI4hRdCdW/qKB3saNSIx.BhtIWUU6', 0, '0000-00-00', '0000-00-00', 'GENERAL');
+(3, 'Santiago Rubiano', '', 'srubiano', '$2a$08$/1ncorp1oQJV6yvs2dsAbOj9cI4hRdCdW/qKB3saNSIx.BhtIWUU6', 0, '0000-00-00', '0000-00-00', 'ADMIN'),
+(3, 'Maria Zuluaga', '', 'mzuluaga', '$2a$08$K.DWGGCeq2qxEepSV8qXcOQM.iRXQ0y2znE44OWqTibbJOcl.JtJi', 0, '0000-00-00', '0000-00-00', 'GENERAL');
 
 --
 -- Índices para tablas volcadas
@@ -75,7 +79,8 @@ INSERT INTO `users` (`user_id`, `nombres_user`, `apellido_user`, `user`, `passwo
 -- Indices de la tabla `task`
 --
 ALTER TABLE `task`
-  ADD PRIMARY KEY (`id_task`);
+  ADD PRIMARY KEY (`id_task`),
+  ADD KEY `fk_user_task` (`user_id`);
 
 --
 -- Indices de la tabla `users`
@@ -91,13 +96,23 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `task`
 --
 ALTER TABLE `task`
-  MODIFY `id_task` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_task` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `task`
+--
+ALTER TABLE `task`
+  ADD CONSTRAINT `fk_user_task` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

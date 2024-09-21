@@ -3,36 +3,62 @@ const bcryptjs = require('bcryptjs')
 const conexion = require('../database/db')
 const {promisify} = require('util')
 
-exports.registerTask = async (req, res)=>{
-    try{
+exports.registerTask = async (req, res) => {
+    try {
         const nombre_task = req.body.taskInput;
-        conexion.query('INSERT INTO task SET ?', {nombre_task:nombre_task, status:0}, (error, result)=>{
-            if(error){console.log(error)}
-            res.redirect('/')
-        })
-    }catch(error){
-        console.log(error)
-    }
-}
+        const userId = req.user.user_id;  // Obtiene el ID del usuario autenticado
+        console.log(req.user);
+        if (!userId) {
+            console.log('Error: No se encontró el userId en req.user');
+            return res.status(400).send('No se puede registrar la tarea. El usuario no está autenticado.');
+        }
 
-exports.getAllTareas = async (req, res)=>{
-    try{
-        conexion.query('SELECT * FROM task', (error, result) => {
+        // Inserta la tarea con el user_id correspondiente
+        conexion.query('INSERT INTO task SET ?', {nombre_task: nombre_task, status: 0, user_id: userId}, (error, result) => {
+            if (error) {
+                console.log('Error al registrar la tarea:', error);
+                return res.status(500).send('Error al registrar la tarea');
+            }
+            res.redirect('/');
+        });
+    } catch (error) {
+        console.log('Error general al registrar la tarea:', error);
+        res.status(500).send('Error en el servidor');
+    }
+};
+
+
+
+exports.getAllTareas = async (req, res) => {
+    try {
+        const userId = req.user.user_id;
+        const tipoUsuario = req.user.tipo_usuario;
+        let query = 'SELECT * FROM task';
+        let queryParams = [];
+
+        if (tipoUsuario === 'GENERAL') {
+            // Si es un usuario GENERAL, solo traerá las tareas que le pertenecen
+            query += ' WHERE user_id = ?';
+            queryParams.push(userId);
+        }
+
+        conexion.query(query, queryParams, (error, result) => {
             if (error) {
                 console.log(error);
-                res.status(500).send('Error al recuperar las tareas');
-            } else {
-                // Pasamos las tareas y el usuario a la vista 'index.ejs'
-                res.render('index', {
-                    user: req.user, // el usuario autenticado
-                    tasks: result   // las tareas recuperadas
-                });
+                return res.status(500).send('Error al recuperar las tareas');
             }
+
+            res.render('index', {
+                user: req.user,  // el usuario autenticado
+                tasks: result    // las tareas recuperadas
+            });
         });
-    }catch(error){
-        console.log(error)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Error del servidor');
     }
-}
+};
+
 
 exports.deleteTask = (req, res) => {
     const taskId = req.params.id;
