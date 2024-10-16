@@ -68,7 +68,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `nombres_user`, `apellido_user`, `user`, `password`, `status`, `fecha_creacion`, `ultimo_acceso`, `tipo_usuario`) VALUES
 (1, 'Pedro Perez', '', 'pperez', '$2a$08$lyLXb5GlKuki5YktPd5zXu9OzZzFZs9EJdjpvEJ5GaWz244oH9yRW', 0, '0000-00-00', '0000-00-00', 'GENERAL'),
-(3, 'Santiago Rubiano', '', 'srubiano', '$2a$08$/1ncorp1oQJV6yvs2dsAbOj9cI4hRdCdW/qKB3saNSIx.BhtIWUU6', 0, '0000-00-00', '0000-00-00', 'ADMIN'),
+(2, 'Santiago Rubiano', '', 'srubiano', '$2a$08$/1ncorp1oQJV6yvs2dsAbOj9cI4hRdCdW/qKB3saNSIx.BhtIWUU6', 0, '0000-00-00', '0000-00-00', 'ADMIN'),
 (3, 'Maria Zuluaga', '', 'mzuluaga', '$2a$08$K.DWGGCeq2qxEepSV8qXcOQM.iRXQ0y2znE44OWqTibbJOcl.JtJi', 0, '0000-00-00', '0000-00-00', 'GENERAL');
 
 --
